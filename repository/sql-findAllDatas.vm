@@ -1,0 +1,5 @@
+SELECT *
+FROM ${entity.databaseTable}
+WHERE
+	SESSION_KEY = /*sessionKey*/'202008020308310'
+ORDER BY ID

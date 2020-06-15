@@ -1,0 +1,113 @@
+#set( $dataFields = $entity.getAttributesByCriteria( $const.NOT_KEY, $const.NOT_IN_SELECTED_LINKS ) )
+#set( $nameLC = ${entity.name.toLowerCase()} )
+#set( $entityLC = $fn.toLowerCase($entity.name))
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<body th:fragment="content">
+	<div class="col-sm-12 no-padding">
+        <div class="header-box">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5 class="title-box">Import Results</h5>
+                </div>
+                <div class="col-md-8">
+                    <a class="u-btn-orange u-btn-effect pull-right mockExport" id="btnExportExcel">
+                        <i class="fa fa-download" aria-hidden="true"></i> <span
+                        th:text="' '+#{common.export.data}"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table id="data" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th class="u_t_no text-center" th:text="#{common.import.row}"></th>
+                        <th class="u_t_no text-center"><span th:text="#{common.import.message.error}"></span></th>
+#foreach( $field in $dataFields )
+#if($field.formattedName(0) != 'deletedBy' && $field.formattedName(0) != 'deletedDate' 
+&& $field.formattedName(0) != 'createdBy'&& $field.formattedName(0) != 'createdDate' 
+&& $field.formattedName(0) != 'updatedDate' && $field.formattedName(0) != 'updatedBy'
+&& $field.formattedName(0) != 'deleteFlag' && $field.formattedName(0) != 'validFlag' 
+&& $field.formattedName(0) != 'companyCode' && $field.formattedName(0) != 'isError' 
+&& $field.formattedName(0) != 'status' && $field.formattedName(0) != 'refId'
+&& $field.formattedName(0) != 'refVersionData' && $field.formattedName(0) != 'sessionKey')
+                      <th class="u_t_code" th:text="#{${entityLC}.${field.formattedName(0)}}">$fn.toUpperCase($field.formattedName(0))</th>
+ #end	
+ #end
+                    </tr>
+                </thead>
+                <tbody>
+                    <th:block th:each="item, i : ${DOLLAR}{pageWrapper.data}" th:with="startIndex=${DOLLAR}{pageWrapper.startIndexCurrent}">
+                        <tr th:attr="data-temp-id=${DOLLAR}{item.id}">
+                            <td class="text-center" th:text="${DOLLAR}{item.rowNum}"></td>
+
+                            <!-- Message Error -->
+                            <td class="text-center error"
+                                onclick="detailMessageImport(this)" style="cursor: pointer;" >
+                                <span th:if="${DOLLAR}{item.messageError}">Error detail</span>
+                                <span th:unless="${DOLLAR}{item.messageError}"></span>
+                                <input type="hidden" th:value="${DOLLAR}{item.messageError}" />
+                            </td>
+
+#foreach( $field in $dataFields )
+#if($field.formattedName(0) != 'deletedBy' && $field.formattedName(0) != 'deletedDate' 
+&& $field.formattedName(0) != 'createdBy'&& $field.formattedName(0) != 'createdDate' 
+&& $field.formattedName(0) != 'updatedDate' && $field.formattedName(0) != 'updatedBy'
+&& $field.formattedName(0) != 'deleteFlag' && $field.formattedName(0) != 'validFlag' 
+&& $field.formattedName(0) != 'companyCode' && $field.formattedName(0) != 'isError' 
+&& $field.formattedName(0) != 'status' && $field.formattedName(0) != 'refId'
+&& $field.formattedName(0) != 'refVersionData' && $field.formattedName(0) != 'sessionKey')
+			<td th:text="${DOLLAR}{item.${field.formattedName(0)}}" ></td>
+		#end
+		#end
+			</tr>
+                    </th:block>
+                </tbody>
+            </table>
+        </div>
+        <script type="text/javascript" th:src="@{/static/js/plupload-3.1.2/plupload.full.min.js}"></script>
+        
+        <input type="hidden" id="sessionKey" name="sessionKey" th:value="${DOLLAR}{sessionKey}" />
+        
+        <input type="hidden" id="isError" name="isError" th:value="${DOLLAR}{searchDto.isError()}" />
+        
+        <input type="hidden" id="error" name="isError" th:value="${DOLLAR}{error}" />
+    </div>
+
+    <!-- PAGINATION -->
+    <th:block th:include="views/commons/pagination-v2.html :: content(${DOLLAR}{pageWrapper})" />
+    
+    <div class="form-group">
+        <div class="col-12 center">
+            <div class="box-btn-footer">
+                <a id="btnClear" class="btn-cancel u-btn-grey u-btn-effect">
+                    <i class="fa fa-times"></i> <span>Cancel</span>
+                </a>
+                <a id="btnSave" class="u-btn-common u-btn-effect btn-save" 
+                    th:if="${DOLLAR}{!searchDto.isError()} and ${DOLLAR}{pageWrapper.countAll > 0} and ${DOLLAR}{!searchDto.isSubmit()}">
+                    <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                    <span>Submit</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="modal-import-message-error">
+        <th:block
+            th:include="views/base-master/detail-message-error.html :: content" />
+    </div>
+    
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var sessionKey = /*[[${DOLLAR}{sessionKey}]]*/;
+        var CONTROLLER_URL = /*[[${DOLLAR}{controllerUrl}]]*/;
+        var IS_ERROR = /*[[${DOLLAR}{searchDto.isError()}]]*/;
+    /*]]>*/
+    </script>
+
+    <script type="text/javascript" th:src="@{/static/js/${nameLC}/${nameLC}-import-table.js}"></script>
+</body>
+</html>

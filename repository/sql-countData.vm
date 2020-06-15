@@ -1,0 +1,5 @@
+SELECT COUNT(*) 
+FROM ${entity.databaseTable}
+WHERE
+	SESSION_KEY = /*sessionKey*/
+	AND STATUS = 1

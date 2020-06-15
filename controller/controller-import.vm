@@ -1,0 +1,127 @@
+#parse("/include/packages_variables.vm")
+#parse("/include/init_var_entity.vm")
+#parse("/include/java_header.vm")
+
+#set( $urlEntityName = $fn.toLowerCase($entity.name))
+#set( $uncapitalizedEntityName = $fn.uncapitalize($entity.name) )
+#set( $referencedEntities = $entity.referencedEntityTypes() )
+#set( $serviceName = "${entity.name}Service")
+#set( $uncapitalizedServiceName = $fn.uncapitalize($serviceName) )
+#set( $enumImport = "${entity.name}ImportEnum")
+#set( $enumImportClass = "${entity.name}ImportEnum.class")
+#set( $enumExport = "${entity.name}ExportEnum")
+#set( $enumExportClass = "${entity.name}ExportEnum.class")
+#set( $importDto = "${entity.name}Dto")
+#set( $importDtoClass = "${entity.name}Dto.class")
+#set( $nameLC = ${entity.name.toLowerCase()} )
+
+package ${target.javaPackageFromFolder($SRC)};
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import vn.com.unit.dms.enumdef.$enumExport;
+import vn.com.unit.dms.enumdef.$enumImport;
+import vn.com.unit.dms.dto.$importDto;
+import vn.com.unit.dms.service.ImportExcelInterfaceService;
+import vn.com.unit.jcanary.config.SystemConfig;
+
+/**
+ * Spring MVC controller for '${entity.name}' management.
+ */
+@Controller
+@RequestMapping("/${urlEntityName}-import")
+public class ${entity.name}Controller extends ImportExcelAbstractController<$importDto> {
+
+    private static final String IMPORT_LIST = "${nameLC}.import.list";
+
+    private static final String IMPORT_TABLE = "${nameLC}.import.table";
+
+    private static final String IMPORT_EXCEL_FILENAME = "Import.xlsx";
+
+    private static final String CONTROLLER_URL = "${urlEntityName}-import";
+
+    private static final String ROLE_PAGE = "ROLE_AUTHED"; // RoleConstant.${entity.name}
+
+    /** SystemConfigure */
+    @Autowired
+    SystemConfig systemConfig;
+
+	@Autowired
+    @Qualifier("${uncapitalizedServiceName}")
+    private ImportExcelInterfaceService<$importDto> commonImportService;
+
+    @Override
+    public String getViewImportList() {
+        return IMPORT_LIST;
+    }
+
+    @Override
+    public String getViewImportTable() {
+        return IMPORT_TABLE;
+    }
+
+    @Override
+    public String getUrlController() {
+        return CONTROLLER_URL;
+    }
+
+    @Override
+    public String getTemplateImportName(Locale locale) {
+        return IMPORT_EXCEL_FILENAME;
+    }
+
+    @Override
+    public String getTemplateExportName(Locale locale) {
+        return IMPORT_EXCEL_FILENAME;
+    }
+
+    @Override
+    public String getRoleForPage() {
+        return ROLE_PAGE;
+    }
+
+    @Override
+    public ImportExcelInterfaceService<$importDto> getCommonImportService() {
+        return commonImportService;
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Class getEnumImport() {
+        return $enumImportClass;
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Class getEnumExport() {
+        return $enumExportClass;
+    }
+    
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Class getClassForExport() {
+        return $importDtoClass;
+    }
+
+    @Override
+    public Map<String, List<String>> setValidateFormat() {
+        // validate data
+        Map<String, List<String>> colsValidate = new HashMap<String, List<String>>();
+
+        return colsValidate;
+    }
+
+    @Override
+    public void doSaveListImport(List<$importDto> listDataSave, String sessionKey, Locale locale)
+            throws Exception {
+        getCommonImportService().saveListImport(listDataSave, sessionKey, locale);
+    }
+}

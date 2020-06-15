@@ -1,0 +1,49 @@
+#set( $dataFields = $entity.getAttributesByCriteria( $const.NOT_KEY, $const.NOT_IN_SELECTED_LINKS) )
+#set( $nameLC = ${entity.name.toLowerCase()} )
+#set( $countField = 1)
+#set( $sizeList = $fn.size($dataFields) - 8)
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<!-- BODY START -->
+<body th:fragment="content">
+    <div class="row form-group col-md-12" >
+        <div class="col-md-12 row">
+            <div class="col-md-2">
+                <label>File Import</label>
+            </div>
+            <div class="col-sm-8">
+                <div id="fileFilelist"></div>
+                <div class="wrap_upload" id="fileContainer">
+                    <a href="#upload" id="filePick" class="upload">Choose file excel</a>
+                </div>
+                <pre style="display: none; color: #0066ff;" id="fileConsole"></pre>
+            </div>
+        </div>
+        <div class="col-md-12 row" th:if="${DOLLAR}{searchDto.isError()}">
+            <div class="col-md-2">
+                <label th:text="#{menu.download}">Export error list</label>
+            </div>
+            <div class="col-md-8">
+                <a href="#" class="btnTemplateDownload" id="btnErrorDownload">Export error/warning list</a>
+                <input type="hidden" id="fileName" name="fileName" th:value="${DOLLAR}{fileName}"/>
+            </div>
+        </div>
+        
+        <div class="col-md-12 row">
+            <div class="col-md-10">
+            </div>
+            <div class="col-md-2 p-0 align-items-end">
+                <a href="#" class="btnTemplateDownload pull-right" id="btnTemplateDownload"
+                    style="font-size: 11px;">Download template import</a>
+            </div>
+        </div>
+    </div>
+
+	<input type="hidden" id="fieldSearchHidd" />
+	<input type="hidden" id="fieldValuesHidd" />
+
+	<script type="text/javascript" th:src="@{/static/js/${nameLC}/${nameLC}-import-search.js}"></script>
+</body>
+<!-- BODY END -->
+</html>

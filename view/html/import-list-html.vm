@@ -1,0 +1,52 @@
+#set( $nameLC = ${entity.name.toLowerCase()} )
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" type="text/css" th:href="@{/static/jquery/multiple-select/css/jquery.multiselect.css}"/>
+<script type="text/javascript" th:src="@{/static/jquery/multiple-select/js/jquery.multiselect.js}"></script>
+
+
+<body>
+	<!-- BREADCRUMB -->
+    <div class="list-breadcrumb">
+        <div class="row">
+            <div class="col-9">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb align-items-center">
+                        <li class="breadcrumb-item"><span
+                            class="title-active-breadcrumb">
+                            <span >Import List</span>
+                        </span></li>
+                        <li class="breadcrumb-item"><a> <i class="fa fa-home"></i>
+                        </a></li>
+                        <li class="breadcrumb-item">
+                            <div id="breadcrumb"></div>
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- END BREADCRUMB -->
+
+	<form class="form-horizontal j-formSearch-import" id="fmUpload" method="POST" role="form" enctype="multipart/form-data"
+        th:object="${DOLLAR}{searchDto}">
+        <th:block th:include="views/commons/message-alert.html :: content(${DOLLAR}{messageList})" />
+        <!-- <th:block th:include="views/commons/message-alert.html :: content(${DOLLAR}{messageErrorList})" /> -->
+        
+        <!-- File Import -->
+        <div class="bg-content">
+            <div class="row" id="divSearch">
+				<th:block th:include="views/${nameLC}/${nameLC}-import-search.html :: content"/>
+            </div>
+        </div>
+        
+        <!-- Table Results -->
+        <div class="bg-content col-sm-12">
+            <div class="unit-bg-table" id="tableList">
+				<th:block th:include="views/${nameLC}/${nameLC}-import-table.html :: content"/>
+            </div>
+        </div>
+    </form>
+</body>
+</html>

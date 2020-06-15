@@ -1,0 +1,9 @@
+SELECT 
+	ROW_NUMBER() OVER(ORDER BY ID)												AS	NO
+	, *
+FROM ${entity.databaseTable}
+WHERE
+	SESSION_KEY = /*sessionKey*/
+	AND STATUS = 1
+ORDER BY ID
+OFFSET /*offset*/ ROWS FETCH NEXT  /*sizeOfPage*/ ROWS ONLY
