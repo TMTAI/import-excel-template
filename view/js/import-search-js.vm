@@ -61,7 +61,8 @@ function initFileUploader(CONTROLLER_URL, boxMain, filePick, fileContainer, file
 	var uploadFile = function (up, file){
 		up.setOption("params",{
 			"fieldSearch" : ${DOLLAR}('#fieldSearchHidd').val() !== undefined ? ${DOLLAR}('#fieldSearchHidd').val() : "",
-			"fieldValues" : ${DOLLAR}('#fieldValuesHidd').val() !== undefined ? ${DOLLAR}('#fieldValuesHidd').val() : ""
+			"fieldValues" : ${DOLLAR}('#fieldValuesHidd').val() !== undefined ? ${DOLLAR}('#fieldValuesHidd').val() : "",
+			"searchDto"	  : ${DOLLAR}('#' + boxMain).serialize()
 		});
 	};
 
@@ -89,6 +90,12 @@ function InitImportFileByChunKForMulti(browse_button, container, uploadUrl, mult
 		},
 
 		multi_selection: multi_selection,
+
+		multipart_params : {
+			"fieldSearch" : "",
+			"fieldValues" : "",
+			"searchDto" : ""
+		},
 
 		chunk_size: "3mb",
 
